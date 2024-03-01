@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-// Update allows you to update an existing application.
+// UpdateRequest allows you to update an existing application.
 type UpdateRequest struct {
 	APIKey        string  // Your API key.
 	APISecret     string  // Your API secret.
@@ -16,7 +16,7 @@ type UpdateRequest struct {
 	Amount        *int    // The new amount for this application in pence. You can only change this if the application's status is "pending", "in_progress" or "pending_capture". The new amount must be less than the current amount.
 }
 
-// The data returned by a successful call to the "update" endpoint.
+// UpdateResponse contains the data returned by a successful call to the "update" endpoint.
 type UpdateResponse struct {
 	ApplicationID string  `json:"token"`    // The ID (token) of this application.
 	OrderID       *string `json:"order_id"` // The new order ID you requested, if any.
@@ -36,7 +36,7 @@ func (response *UpdateResponse) UnmarshalJSON(data []byte) error {
 	}
 
 	if err := json.Unmarshal(data, &tmp); err != nil {
-		return err
+		return errors.New("couldn't unmarshal UpdateResponse: " + err.Error())
 	}
 
 	// API returns it as a string but it's more helpful to have it as a number.
@@ -63,7 +63,7 @@ func (response *UpdateResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Execute the request.
+// Fetch executes the request.
 func (request UpdateRequest) Fetch() (response *UpdateResponse, err *PASDKError) {
 	defer catchGenericPanic(&response, &err)
 

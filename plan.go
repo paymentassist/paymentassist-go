@@ -1,6 +1,6 @@
 package pasdk
 
-// Plan accepts a transaction amount and an optional plan ID and term length,
+// PlanRequest accepts a transaction amount and an optional plan ID and term length,
 // returning a full payment schedule including amounts and dates.
 type PlanRequest struct {
 	APIKey     string // Your API key.
@@ -10,7 +10,7 @@ type PlanRequest struct {
 	PlanLength *int   // The length of the payment plan (must correspond to the lengths available on the given plan).
 }
 
-// The data returned by a successful call to the "plan" endpoint.
+// PlanResponse contains the data returned by a successful call to the "plan" endpoint.
 type PlanResponse struct {
 	PlanName        string      `json:"plan"`      // The name of this plan.
 	Amount          int         `json:"amount"`    // The amount you requested, in pence.
@@ -19,7 +19,7 @@ type PlanResponse struct {
 	PaymentSchedule []Repayment `json:"schedule"`  // A breakdown of what the repayments would look like under this plan.
 }
 
-// Execute the request.
+// Fetch executes the request.
 func (request PlanRequest) Fetch() (response *PlanResponse, err *PASDKError) {
 	defer catchGenericPanic(&response, &err)
 

@@ -1,13 +1,13 @@
 package pasdk
 
-// Capture allows you to capture an application that's currently in a "pending_capture" state.
+// CaptureRequest allows you to finalise an application that's currently in a "pending_capture" state.
 type CaptureRequest struct {
 	APIKey        string // Your API key.
 	APISecret     string // Your API secret.
 	ApplicationID string // The application ID (token) you received when calling the "begin" endpoint.
 }
 
-// The data returned by a call to the "capture" endpoint. Unlike some other
+// CaptureResponse contains the data returned by a call to the "capture" endpoint. Unlike some other
 // endpoints, "capture" can return a response even when unsuccessful.
 type CaptureResponse struct {
 	ApplicationID               string  `json:"token"`            // The ID (token) of this application.
@@ -16,7 +16,7 @@ type CaptureResponse struct {
 	DepositCaptureFailureReason *string `json:"deposit_reason"`   // If DepositCaptured is false, this contains the reason for capture failure. This is nil in all other situations.
 }
 
-// Execute the request.
+// Fetch executes the request.
 func (request CaptureRequest) Fetch() (response *CaptureResponse, err *PASDKError) {
 	defer catchGenericPanic(&response, &err)
 

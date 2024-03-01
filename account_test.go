@@ -18,6 +18,7 @@ func Test_Account(t *testing.T) {
 
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	if response.DisplayName != "Test Dealer" {

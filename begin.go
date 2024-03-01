@@ -1,6 +1,6 @@
 package pasdk
 
-// Begin begins the application process. Nullable fields are generally optional.
+// BeginRequest begins the application process. Nullable fields are generally optional.
 type BeginRequest struct {
 	APISecret           string  // Your API secret.
 	APIKey              string  // Your API key.
@@ -19,23 +19,24 @@ type BeginRequest struct {
 	SendEmail           *bool   // Whether to send the application link to the customer via email. Defaults to false.
 	SendSMS             *bool   // Whether to send the application link to the customer via SMS. Defaults to false.
 	EnableMultiPlan     *bool   // If true, the customer will see a list of all available payment plans and will be able to select one themselves. Defaults to false.
-	QRCode              *bool   // If true, a base64-encoded QR code will be returned, which the customer can scan with a mobile device to continue the application. Defaults to false.
-	EnableAutoCapture   *bool   // Enables auto capture (see https://api-docs.payment-assist.co.uk/auto-capture). Defaults to true.
+	ReturnQRCode        *bool   // If true, a base64-encoded QR code will be returned, which the customer can scan with a mobile device to continue the application. Defaults to false.
+	EnableAutoCapture   *bool   // Enables auto-capture (see https://api-docs.payment-assist.co.uk/auto-capture). Defaults to true.
 	FailureURL          *string // A URL you want the customer to be redirected to when the application is denied.
 	SuccessURL          *string // A URL you want the customer to be redirected to when the application is approved.
 	WebhookURL          *string // A callback URL for receiving webhooks (see https://api-docs.payment-assist.co.uk/webhooks).
 	PlanID              *int    // The ID of the application's plan type. This is required if the account has access to multiple plan types and EnableMultiPlan is false.
-	VehicleLicencePlate *string // A vehicle's licence plate number.
-	Description         *string // A description of the services/goods being sold.
+	VehicleLicencePlate *string // The vehicle's licence plate number, where relevant.
+	Description         *string // A description of the services or goods being sold.
 	Expiry              *int    // The amount of time before the application expires, in seconds. This is 24 hours by default.
 }
 
-// The data returned by a successful call to the "begin" endpoint.
+// BeginResponse contains the data returned by a successful call to the "begin" endpoint.
 type BeginResponse struct {
 	ApplicationID   string `json:"token"` // The ID (AKA token) of the application that was created. You should save this for later use.
 	ContinuationURL string `json:"url"`   // The URL you should direct the customer to so that they can complete the rest of the signup process.
 }
 
+// Fetch executes the request.
 func (request BeginRequest) Fetch() (response *BeginResponse, err *PASDKError) {
 	defer catchGenericPanic(&response, &err)
 
@@ -62,7 +63,7 @@ func (request BeginRequest) Fetch() (response *BeginResponse, err *PASDKError) {
 		"order_id=" + request.OrderID,
 		"plan_id=" + toString(request.PlanID),
 		"postcode=" + request.CustomerPostcode,
-		"qr_code=" + toString(request.QRCode),
+		"qr_code=" + toString(request.ReturnQRCode),
 		"reg_no=" + toString(request.VehicleLicencePlate),
 		"s_name=" + request.CustomerLastName,
 		"send_email=" + toString(request.SendEmail),
@@ -111,8 +112,8 @@ func applyBeginDefaults(params BeginRequest) BeginRequest {
 		params.EnableMultiPlan = &falseValue
 	}
 
-	if params.QRCode == nil {
-		params.QRCode = &falseValue
+	if params.ReturnQRCode == nil {
+		params.ReturnQRCode = &falseValue
 	}
 
 	if params.EnableAutoCapture == nil {

@@ -33,7 +33,7 @@ request := pasdk.AccountRequest{
 accountResponse, err := request.Fetch()
 
 if err != nil {
-    fmt.Println("There was an error: " + err.Error())
+    fmt.Println("There was an error: "+err.Error())
 	return
 }
 

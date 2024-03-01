@@ -1,6 +1,6 @@
 package pasdk
 
-// Pre-approval allows you to check the eligibity of a customer in advance.
+// PreapprovalRequest allows you to check the eligibity of a customer in advance.
 // Success simply means that the customer has passed our internal checks. They
 // will still need to have funds available to cover any deposit payment for
 // the application to be successful.
@@ -13,12 +13,12 @@ type PreapprovalRequest struct {
 	CustomerAddress1  string // The first line of the customer's address.
 }
 
-// The data returned by a successful call to the "preapproval" endpoint.
+// PreapprovalResponse contains the data returned by a successful call to the "preapproval" endpoint.
 type PreapprovalResponse struct {
 	Approved bool `json:"approved"` // Whether or not this customer passed the pre-approval checks.
 }
 
-// Execute the request.
+// Fetch executes the request.
 func (request PreapprovalRequest) Fetch() (response *PreapprovalResponse, err *PASDKError) {
 	defer catchGenericPanic(&response, &err)
 

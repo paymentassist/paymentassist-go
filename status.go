@@ -4,14 +4,14 @@ import (
 	"time"
 )
 
-// Status allows you to check the status of an existing application.
+// StatusRequest allows you to check the status of an existing application.
 type StatusRequest struct {
 	APIKey        string // Your API key.
 	APISecret     string // Your API secret.
 	ApplicationID string // The application ID (token) you received when calling the "begin" endpoint.
 }
 
-// The data returned by a successful call to the "status" endpoint.
+// StatusResponse contains the data returned by a successful call to the "status" endpoint.
 type StatusResponse struct {
 	ApplicationID          string    `json:"token"`            // The ID (token) of this application.
 	Status                 string    `json:"status"`           // The status of this application.
@@ -22,7 +22,7 @@ type StatusResponse struct {
 	HasInvoice             bool      `json:"has_invoice"`      // Whether an invoice has been uploaded for this application.
 }
 
-// Execute the request.
+// Fetch executes the request.
 func (request StatusRequest) Fetch() (response *StatusResponse, err *PASDKError) {
 	defer catchGenericPanic(&response, &err)
 

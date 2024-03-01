@@ -1,19 +1,19 @@
 package pasdk
 
-// Account returns information about an account and its available plan types.
+// AccountRequest returns information about an account and its available plan types.
 type AccountRequest struct {
 	APIKey    string // Your API key.
 	APISecret string // Your API secret.
 }
 
-// The data returned by a successful call to the "account" endpoint.
+// AccountResponse contains the data returned by a successful call to the "account" endpoint.
 type AccountResponse struct {
 	LegalName   string `json:"legal_name"`   // The legal name of the dealer.
 	DisplayName string `json:"display_name"` // The display name of the dealer.
 	Plans       []Plan `json:"plans"`        // A list of available plan types for this dealer.
 }
 
-// Execute the request.
+// Fetch executes the request.
 func (request AccountRequest) Fetch() (response *AccountResponse, err *PASDKError) {
 	defer catchGenericPanic(&response, &err)
 

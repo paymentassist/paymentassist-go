@@ -79,7 +79,7 @@ func (plan *Plan) UnmarshalJSON(data []byte) error {
 	}
 
 	if err := json.Unmarshal(data, &tmp); err != nil {
-		return err
+		return errors.New("couldn't unmarshal Plan: " + err.Error())
 	}
 
 	// API returns it as a number but we need it as a string since letting
@@ -105,7 +105,7 @@ func (repayment *Repayment) UnmarshalJSON(data []byte) error {
 	}
 
 	if err := json.Unmarshal(data, &tmp); err != nil {
-		return err
+		return errors.New("couldn't unmarshal Repayment: " + err.Error())
 	}
 
 	// Go fails to decode the date format returned by the API by default, so we need

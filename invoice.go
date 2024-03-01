@@ -4,23 +4,23 @@ import (
 	"encoding/base64"
 )
 
-// Invoice allows you to upload an invoice for a completed application.
+// InvoiceRequest allows you to upload an invoice for a completed application.
 type InvoiceRequest struct {
 	APIKey        string // Your API key.
 	APISecret     string // Your API secret.
 	ApplicationID string // The application ID (token) you received when calling the "begin" endpoint.
-	FileType      string // The filetype. Some supported options are "pdf", "html", "txt", "doc" and "xls".
-	FileData      []byte // The file data.
+	FileType      string // The file type. Some supported options are "pdf", "html", "txt", "doc" and "xls".
+	FileData      []byte // The file as a slice of bytes.
 }
 
-// The data returned by a call to the "invoice" endpoint. Unlike some
+// InvoiceResponse contains the data returned by a call to the "invoice" endpoint. Unlike some
 // endpoints, "invoice" can return a response even if the upload was unsuccessful.
 type InvoiceResponse struct {
 	ApplicationID string `json:"token"`         // The ID (token) of this application.
 	UploadStatus  string `json:"upload_status"` // The status of the upload ("success" or "failed").
 }
 
-// Execute the request.
+// Fetch executes the request.
 func (request InvoiceRequest) Fetch() (response *InvoiceResponse, err *PASDKError) {
 	defer catchGenericPanic(&response, &err)
 
