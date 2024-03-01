@@ -1,2 +1,71 @@
+# This SDK is undergoing testing and has not been released!
+
 # paymentassist-go
-Go SDK for the Payment Assist Merchant API
+
+The official Go SDK for the Payment Assist Merchant API.
+
+## Dependencies
+
+Officially, Go v1.19 and beyond is supported, but the SDK might also work on v1.18.
+
+## Installation
+
+`go get github.com/paymentassist/paymentassist-go`
+
+## Usage
+
+The full API reference can be found here: https://api-docs.payment-assist.co.uk/.
+
+The way to use this SDK is by creating a request object for the action you want to perform, followed by calling the `Fetch()` method on it. `Fetch()` returns a response object and an error.
+
+If an error is returned, the request was unsucessful and the response object will be `nil`. The error is a custom type that contains detailed information about what happened. Of note are the fields `IsRequestRefusedError`, `IsValidationFailedError` and `IsUnexpectedError`. In the case of failure you may want to use these to decide whether or not to retry the request. You don't have to use these though and there is no harm in retrying all errors. See the code comments for more information on what these error types mean.
+
+Note that `InvoiceRequest` and `CaptureRequest` may return a response and no error even if the request was unsuccessful; specific error data for these is provided in the response.
+
+Example usage:
+
+```
+request := pasdk.AccountRequest{
+	APIKey:    "my_api_key",
+	APISecret: "my_api_secret",
+}
+
+accountResponse, err := request.Fetch()
+
+if err != nil {
+    fmt.Println("There was an error: " + err.Error())
+	return
+}
+
+// Print the dealer's display name.
+fmt.Println(accountResponse.DisplayName)
+```
+
+Note that it is not recommended to hard-code your API credentials like in the above example, this is just for illustration purposes.
+
+Whether your request is sent to the demo or production site is automatically determined depending on whether your API secret begins with `demo_` or `prod_`.
+
+The following actions are available:
+
+| Action | Description |
+|--------|-------------|
+| __AccountRequest__ | Returns information about the dealer's account. |
+| __PlanRequest__ | Returns what the repayments would look like under a hypothetical repayment plan. |
+| __PreapprovalRequest__ | Checks whether a customer would pass the basic pre-approval checks. |
+| __BeginRequest__ | Begins an application. |
+| __StatusRequest__ | Returns information about an ongoing application. |
+| __UpdateRequest__ | Updates an existing application. |
+| __CaptureRequest__ | Finalises a completed application (used only when auto-capture is disabled). |
+| __InvoiceRequest__ | Uploads an invoice for a completed application. |
+
+## Notes
+
+Only the latest version (v2) of the Payment Assist API is supported by this SDK.
+
+As virtually all requests to the API should return immediately, there is currently no support for cancelling an ongoing request. There is a hard-coded timeout of 30 seconds per request.
+
+## Support
+
+For technical support, please email [itsupport@payment-assist.co.uk](mailto:itsupport@payment-assist.co.uk).
+
+If you encounter any issues or find that a particular part of the SDK isn't meeting your requirements, feel free to contact support and we will do our best to accommodate where we can.
