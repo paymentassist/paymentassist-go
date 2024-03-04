@@ -13,10 +13,12 @@ func Test_Plan(t *testing.T) {
 	planID := 5
 
 	request := PlanRequest{
-		APISecret: getTestAPISecret(),
-		APIKey:    getTestAPIKey(),
-		Amount:    100000,
-		PlanID:    &planID,
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
+		Amount: 100000,
+		PlanID: &planID,
 	}
 
 	response, err := request.Fetch()
@@ -55,13 +57,13 @@ func Test_validatePlanRequest(t *testing.T) {
 		t.Error()
 	}
 
-	request.APIKey = "test"
+	request.AuthInfo.APIKey = "test"
 
 	if validatePlanRequest(request).Error() != "APISecret cannot be empty" {
 		t.Error()
 	}
 
-	request.APISecret = "test"
+	request.AuthInfo.APISecret = "test"
 
 	if validatePlanRequest(request).Error() != "field Amount must be greater than 0" {
 		t.Error()

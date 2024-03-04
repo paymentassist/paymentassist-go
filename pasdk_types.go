@@ -120,3 +120,11 @@ func (repayment *Repayment) UnmarshalJSON(data []byte) error {
 
 	return nil
 }
+
+// PAAuth contains your API credentials and specifies whether the request should be
+// made against the demo or production API.
+type PAAuth struct {
+	APIKey       string // Your API key.
+	APISecret    string // Your API secret.
+	IsProduction bool   // If true, the request will be sent to the production site. Otherwise, the demo site will be used. Demo credentials do not work on the production site and vice-versa.
+}

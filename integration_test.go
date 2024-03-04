@@ -27,8 +27,10 @@ func testUpdate(t *testing.T, applicationID string) {
 	amount := 80000
 
 	request := UpdateRequest{
-		APIKey:        getTestAPIKey(),
-		APISecret:     getTestAPISecret(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 		ApplicationID: applicationID,
 		Amount:        &amount,
 	}
@@ -55,8 +57,10 @@ func testUpdate(t *testing.T, applicationID string) {
 	expiresIn := 60 * 10
 
 	request = UpdateRequest{
-		APIKey:        getTestAPIKey(),
-		APISecret:     getTestAPISecret(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 		ApplicationID: applicationID,
 		Amount:        &amount,
 		ExpiresIn:     &expiresIn,
@@ -81,8 +85,10 @@ func testUpdate(t *testing.T, applicationID string) {
 
 func testStatus(t *testing.T, applicationID string) {
 	request := StatusRequest{
-		APIKey:        getTestAPIKey(),
-		APISecret:     getTestAPISecret(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 		ApplicationID: applicationID,
 	}
 
@@ -115,10 +121,12 @@ func testStatus(t *testing.T, applicationID string) {
 
 func testPlan(t *testing.T, accountInfo AccountResponse) {
 	request := PlanRequest{
-		APIKey:    getTestAPIKey(),
-		APISecret: getTestAPISecret(),
-		Amount:    50000,
-		PlanID:    &accountInfo.Plans[0].ID,
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
+		Amount: 50000,
+		PlanID: &accountInfo.Plans[0].ID,
 	}
 
 	response, err := request.Fetch()
@@ -157,8 +165,10 @@ func testPlan(t *testing.T, accountInfo AccountResponse) {
 
 func testPreapproval(t *testing.T) {
 	request := PreapprovalRequest{
-		APIKey:            getTestAPIKey(),
-		APISecret:         getTestAPISecret(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 		CustomerFirstName: "Test",
 		CustomerLastName:  "Testington",
 		CustomerAddress1:  "Test House",
@@ -178,8 +188,10 @@ func testPreapproval(t *testing.T) {
 
 func testCapture(t *testing.T, applicationID string) {
 	request := CaptureRequest{
-		APIKey:        getTestAPIKey(),
-		APISecret:     getTestAPISecret(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 		ApplicationID: applicationID,
 	}
 
@@ -194,8 +206,10 @@ func testCapture(t *testing.T, applicationID string) {
 
 func testInvoice(t *testing.T, applicationID string) {
 	request := InvoiceRequest{
-		APIKey:        getTestAPIKey(),
-		APISecret:     getTestAPISecret(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 		ApplicationID: applicationID,
 		FileType:      "txt",
 		FileData:      []byte("Test invoice"),
@@ -220,8 +234,10 @@ func testBegin(t *testing.T) *BeginResponse {
 	falseValue := false
 
 	request := BeginRequest{
-		APIKey:            getTestAPIKey(),
-		APISecret:         getTestAPISecret(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 		OrderID:           getRandomID(),
 		Amount:            100000,
 		CustomerFirstName: "Test",
@@ -249,8 +265,10 @@ func testBegin(t *testing.T) *BeginResponse {
 
 func testAccount(t *testing.T) *AccountResponse {
 	request := AccountRequest{
-		APIKey:    getTestAPIKey(),
-		APISecret: getTestAPISecret(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 	}
 
 	accountResponse, err := request.Fetch()

@@ -11,8 +11,10 @@ func Test_Status(t *testing.T) {
 	}
 
 	request := StatusRequest{
-		APISecret:     getTestAPISecret(),
-		APIKey:        getTestAPIKey(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 		ApplicationID: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
 	}
 
@@ -56,13 +58,13 @@ func Test_validateStatusRequest(t *testing.T) {
 		t.Error()
 	}
 
-	request.APIKey = "test"
+	request.AuthInfo.APIKey = "test"
 
 	if validateStatusRequest(request).Error() != "APISecret cannot be empty" {
 		t.Error()
 	}
 
-	request.APISecret = "test"
+	request.AuthInfo.APISecret = "test"
 
 	if validateStatusRequest(request).Error() != "ApplicationID cannot be empty" {
 		t.Error()

@@ -2,8 +2,7 @@ package pasdk
 
 // AccountRequest returns information about an account and its available plan types.
 type AccountRequest struct {
-	APIKey    string // Your API key.
-	APISecret string // Your API secret.
+	AuthInfo PAAuth // Authentication information including your API credentials.
 }
 
 // AccountResponse contains the data returned by a successful call to the "account" endpoint.
@@ -23,14 +22,14 @@ func (request AccountRequest) Fetch() (response *AccountResponse, err *PASDKErro
 		return nil, err.Wrap("request is invalid: ")
 	}
 
-	signature := generateSignature([]string{}, request.APISecret)
+	signature := generateSignature([]string{}, request.AuthInfo.APISecret)
 
 	requestParams := []string{
-		"api_key=" + request.APIKey,
+		"api_key=" + request.AuthInfo.APIKey,
 		"signature=" + signature,
 	}
 
-	requestURL, err := getRequestURL(request.APISecret)
+	requestURL, err := getRequestURL(request.AuthInfo.APISecret)
 
 	if err != nil {
 		return nil, err.Wrap("failed determining request URL: ")
@@ -46,11 +45,11 @@ func (request AccountRequest) Fetch() (response *AccountResponse, err *PASDKErro
 }
 
 func validateAccountRequest(request AccountRequest) (err *PASDKError) {
-	if len(request.APIKey) == 0 {
+	if len(request.AuthInfo.APIKey) == 0 {
 		return buildValidationFailedError("APIKey cannot be empty")
 	}
 
-	if len(request.APISecret) == 0 {
+	if len(request.AuthInfo.APISecret) == 0 {
 		return buildValidationFailedError("APISecret cannot be empty")
 	}
 

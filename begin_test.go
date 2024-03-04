@@ -11,8 +11,10 @@ func Test_Begin(t *testing.T) {
 	}
 
 	request := BeginRequest{
-		APISecret:         getTestAPISecret(),
-		APIKey:            getTestAPIKey(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 		OrderID:           "111",
 		Amount:            50000,
 		CustomerFirstName: "Test",
@@ -46,13 +48,13 @@ func Test_validateBeginRequest(t *testing.T) {
 		t.Error()
 	}
 
-	request.APIKey = "test"
+	request.AuthInfo.APIKey = "test"
 
 	if validateBeginRequest(request).Error() != "APISecret cannot be empty" {
 		t.Error()
 	}
 
-	request.APISecret = "test"
+	request.AuthInfo.APISecret = "test"
 
 	if validateBeginRequest(request).Error() != "OrderID cannot be empty" {
 		t.Error()

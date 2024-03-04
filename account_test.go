@@ -10,8 +10,10 @@ func Test_Account(t *testing.T) {
 	}
 
 	request := AccountRequest{
-		APISecret: getTestAPISecret(),
-		APIKey:    getTestAPIKey(),
+		AuthInfo: PAAuth{
+			APISecret: getTestAPISecret(),
+			APIKey:    getTestAPIKey(),
+		},
 	}
 
 	response, err := request.Fetch()
@@ -98,13 +100,13 @@ func Test_validateAccountRequest(t *testing.T) {
 		t.Error()
 	}
 
-	request.APIKey = "test"
+	request.AuthInfo.APIKey = "test"
 
 	if validateAccountRequest(request).Error() != "APISecret cannot be empty" {
 		t.Error()
 	}
 
-	request.APISecret = "test"
+	request.AuthInfo.APISecret = "test"
 
 	if validateAccountRequest(request) != nil {
 		t.Error()
