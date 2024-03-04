@@ -11,14 +11,12 @@ func Test_Plan(t *testing.T) {
 	}
 
 	planID := 5
-	planLength := 4
 
 	request := PlanRequest{
-		APISecret:  getTestAPISecret(),
-		APIKey:     getTestAPIKey(),
-		Amount:     100000,
-		PlanID:     &planID,
-		PlanLength: &planLength,
+		APISecret: getTestAPISecret(),
+		APIKey:    getTestAPIKey(),
+		Amount:    100000,
+		PlanID:    &planID,
 	}
 
 	response, err := request.Fetch()

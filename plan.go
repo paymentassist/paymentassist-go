@@ -3,11 +3,10 @@ package pasdk
 // PlanRequest accepts a transaction amount and an optional plan ID and term length,
 // returning a full payment schedule including amounts and dates.
 type PlanRequest struct {
-	APIKey     string // Your API key.
-	APISecret  string // Your API secret.
-	Amount     int    // The invoice amount in pence.
-	PlanID     *int   // The plan ID. If empty, the account's default plan is used.
-	PlanLength *int   // The length of the payment plan (must correspond to the lengths available on the given plan).
+	APIKey    string // Your API key.
+	APISecret string // Your API secret.
+	Amount    int    // The invoice amount in pence.
+	PlanID    *int   // The plan ID. If empty, the account's default plan is used.
 }
 
 // PlanResponse contains the data returned by a successful call to the "plan" endpoint.
@@ -32,7 +31,6 @@ func (request PlanRequest) Fetch() (response *PlanResponse, err *PASDKError) {
 	requestParams := []string{
 		"amount=" + toString(request.Amount),
 		"plan_id=" + toString(request.PlanID),
-		"plan_length=" + toString(request.PlanLength),
 	}
 
 	requestParams = removeEmptyParams(requestParams)

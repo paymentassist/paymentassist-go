@@ -115,11 +115,10 @@ func testStatus(t *testing.T, applicationID string) {
 
 func testPlan(t *testing.T, accountInfo AccountResponse) {
 	request := PlanRequest{
-		APIKey:     getTestAPIKey(),
-		APISecret:  getTestAPISecret(),
-		Amount:     50000,
-		PlanID:     &accountInfo.Plans[0].ID,
-		PlanLength: &accountInfo.Plans[0].Instalments,
+		APIKey:    getTestAPIKey(),
+		APISecret: getTestAPISecret(),
+		Amount:    50000,
+		PlanID:    &accountInfo.Plans[0].ID,
 	}
 
 	response, err := request.Fetch()
