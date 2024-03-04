@@ -123,3 +123,25 @@ func Test_validateBeginRequest(t *testing.T) {
 		t.Error()
 	}
 }
+
+func Test_applyBeginDefaults(t *testing.T) {
+	request := BeginRequest{}
+
+	request = applyBeginDefaults(request)
+
+	if *request.SendEmail != false {
+		t.Error()
+	}
+	if *request.SendSMS != false {
+		t.Error()
+	}
+	if *request.EnableMultiPlan != false {
+		t.Error()
+	}
+	if *request.ReturnQRCode != false {
+		t.Error()
+	}
+	if *request.EnableAutoCapture != true {
+		t.Error()
+	}
+}
