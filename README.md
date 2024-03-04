@@ -55,7 +55,7 @@ The following actions are available:
 | __BeginRequest__ | Begins an application. |
 | __StatusRequest__ | Returns information about an ongoing application. |
 | __UpdateRequest__ | Updates an existing application. |
-| __CaptureRequest__ | Finalises a completed application (used only when auto-capture is disabled). |
+| __CaptureRequest__ | Finalises an application that's in pending_capture state (used only when auto-capture is disabled). |
 | __InvoiceRequest__ | Uploads an invoice for a completed application. |
 
 ## Notes
