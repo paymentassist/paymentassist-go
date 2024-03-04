@@ -80,7 +80,7 @@ func (request BeginRequest) Fetch() (response *BeginResponse, err *PASDKError) {
 	requestParams = append(requestParams, "api_key="+request.AuthInfo.APIKey)
 	requestParams = append(requestParams, "signature="+signature)
 
-	requestURL, err := getRequestURL(request.AuthInfo.APISecret)
+	requestURL, err := getRequestURL(request.AuthInfo)
 
 	if err != nil {
 		return nil, err.Wrap("failed determining request URL: ")

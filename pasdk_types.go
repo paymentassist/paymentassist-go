@@ -25,18 +25,18 @@ type PASDKError struct {
 	// recieve this kind of error.
 	IsUnexpectedError bool
 
-	ErrorMessage string
+	errorMessage string
 }
 
 // Wrap wraps the error message in this error with another error message.
 func (err *PASDKError) Wrap(errorString string) *PASDKError {
-	err.ErrorMessage = errorString + err.ErrorMessage
+	err.errorMessage = errorString + err.errorMessage
 	return err
 }
 
 // Error returns the error message.
 func (err PASDKError) Error() string {
-	return err.ErrorMessage
+	return err.errorMessage
 }
 
 // GetErrorType returns the type of error as a string. You may find this helpful

@@ -42,7 +42,7 @@ func (request InvoiceRequest) Fetch() (response *InvoiceResponse, err *PASDKErro
 	requestParams = append(requestParams, "api_key="+request.AuthInfo.APIKey)
 	requestParams = append(requestParams, "signature="+signature)
 
-	requestURL, err := getRequestURL(request.AuthInfo.APISecret)
+	requestURL, err := getRequestURL(request.AuthInfo)
 
 	if err != nil {
 		return nil, err.Wrap("failed determining request URL: ")

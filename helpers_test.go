@@ -11,22 +11,40 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func Test_isProductionSecret(t *testing.T) {
-	if isProductionSecret("prod34434") {
+func Test_getRequestURL_ErrorsIfInconsistentCredentials(t *testing.T) {
+	if shouldRunIntegrationTests() {
+		return
+	}
+
+	defer func() {
+		testsAreRunning = true
+	}()
+
+	testsAreRunning = false
+
+	result, err := getRequestURL(PAAuth{
+		APIKey:       "test",
+		APISecret:    "demo_test",
+		IsProduction: true,
+	})
+
+	if result != "" {
+		t.Error()
+	}
+	if err.Error() != "you're trying to make a request to the production API but you've provided a demo API secret" {
 		t.Error()
 	}
 
-	if !isProductionSecret("prod_34434") {
+	result, err = getRequestURL(PAAuth{
+		APIKey:       "test",
+		APISecret:    "prod_test",
+		IsProduction: false,
+	})
+
+	if result != "" {
 		t.Error()
 	}
-}
-
-func Test_isDemoSecret(t *testing.T) {
-	if isDemoSecret("demo34434") {
-		t.Error()
-	}
-
-	if !isDemoSecret("demo_34434") {
+	if err.Error() != "you're trying to make a request to the demo API but you've provided a production API secret" {
 		t.Error()
 	}
 }
@@ -75,7 +93,9 @@ func Test_getRequestURL(t *testing.T) {
 		testsAreRunning = true
 	}()
 
-	url, err := getRequestURL("testsecret")
+	url, err := getRequestURL(PAAuth{
+		APISecret: "testsecret",
+	})
 
 	if url != "" {
 		t.Error()
@@ -87,7 +107,9 @@ func Test_getRequestURL(t *testing.T) {
 	testsAreRunning = false
 	os.Setenv("GO_PASDK_INTEGRATION_TESTS", "1")
 
-	url, err = getRequestURL("testsecret")
+	url, err = getRequestURL(PAAuth{
+		APISecret: "testsecret",
+	})
 
 	if url != "https://api.demo.payassi.st/" {
 		t.Error()
@@ -98,7 +120,9 @@ func Test_getRequestURL(t *testing.T) {
 
 	os.Unsetenv("GO_PASDK_INTEGRATION_TESTS")
 
-	url, err = getRequestURL("demo_demosecret")
+	url, err = getRequestURL(PAAuth{
+		APISecret: "demo_demosecret",
+	})
 
 	if url != "https://api.demo.payassi.st/" {
 		t.Error()
@@ -107,21 +131,15 @@ func Test_getRequestURL(t *testing.T) {
 		t.Error()
 	}
 
-	url, err = getRequestURL("prod_productionsecret")
+	url, err = getRequestURL(PAAuth{
+		APISecret:    "prod_productionsecret",
+		IsProduction: true,
+	})
 
 	if url != "https://api.v2.payment-assist.co.uk/" {
 		t.Error()
 	}
 	if err != nil {
-		t.Error()
-	}
-
-	url, err = getRequestURL("")
-
-	if url != "" {
-		t.Error()
-	}
-	if err == nil {
 		t.Error()
 	}
 }

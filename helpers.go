@@ -26,28 +26,28 @@ func getAPIRequestClient() *http.Client {
 	return requestClient
 }
 
-func getRequestURL(apiSecret string) (string, *PASDKError) {
+func getRequestURL(authInfo PAAuth) (string, *PASDKError) {
 	if testsAreRunning && !shouldRunIntegrationTests() {
 		return "", nil
 	}
 
-	if isDemoSecret(apiSecret) || shouldRunIntegrationTests() {
+	if !authInfo.IsProduction || shouldRunIntegrationTests() {
+		if strings.Contains(authInfo.APISecret, "prod_") {
+			return "", buildValidationFailedError("you're trying to make a request to the demo API but you've provided a production API secret")
+		}
+
 		return "https://api.demo.payassi.st/", nil
 	}
 
-	if isProductionSecret(apiSecret) {
+	if authInfo.IsProduction {
+		if strings.Contains(authInfo.APISecret, "demo_") {
+			return "", buildValidationFailedError("you're trying to make a request to the production API but you've provided a demo API secret")
+		}
+
 		return "https://api.v2.payment-assist.co.uk/", nil
 	}
 
-	return "", buildValidationFailedError("your API secret is invalid")
-}
-
-func isProductionSecret(secret string) bool {
-	return strings.Contains(secret, "prod_")
-}
-
-func isDemoSecret(secret string) bool {
-	return strings.Contains(secret, "demo_")
+	return "", buildValidationFailedError("authentication was missing or invalid")
 }
 
 func makeAPIPOSTRequest[T interface{}](formData []string, endpoint string) (*T, *PASDKError) {
@@ -178,7 +178,7 @@ func catchGenericPanic[T interface{}](response **T, err **PASDKError) {
 		*response = nil
 
 		*err = &PASDKError{
-			ErrorMessage: "there was an unexpected panic; this may indicate a bug, " +
+			errorMessage: "there was an unexpected panic; this may indicate a bug, " +
 				"please contact support: " + fmt.Sprintf("%v", data),
 			IsUnexpectedError: true,
 		}
@@ -188,20 +188,20 @@ func catchGenericPanic[T interface{}](response **T, err **PASDKError) {
 func buildValidationFailedError(message string) *PASDKError {
 	return &PASDKError{
 		IsValidationFailedError: true,
-		ErrorMessage:            message,
+		errorMessage:            message,
 	}
 }
 
 func buildRequestRefusedError(message string) *PASDKError {
 	return &PASDKError{
 		IsRequestRefusedError: true,
-		ErrorMessage:          message,
+		errorMessage:          message,
 	}
 }
 
 func buildUnexpectedError(message string) *PASDKError {
 	return &PASDKError{
-		ErrorMessage:      message,
+		errorMessage:      message,
 		IsUnexpectedError: true,
 	}
 }

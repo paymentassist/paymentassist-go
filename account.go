@@ -29,7 +29,7 @@ func (request AccountRequest) Fetch() (response *AccountResponse, err *PASDKErro
 		"signature=" + signature,
 	}
 
-	requestURL, err := getRequestURL(request.AuthInfo.APISecret)
+	requestURL, err := getRequestURL(request.AuthInfo)
 
 	if err != nil {
 		return nil, err.Wrap("failed determining request URL: ")
