@@ -121,10 +121,9 @@ func (repayment *Repayment) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// PAAuth contains your API credentials and specifies whether the request should be
-// made against the demo or production API.
+// PAAuth contains your API credentials and specifies the API URL.
 type PAAuth struct {
-	APIKey       string // Your API key.
-	APISecret    string // Your API secret.
-	IsProduction bool   // If true, the request will be sent to the production site. Otherwise, the demo site will be used. Demo credentials do not work on the production site and vice-versa.
+	APIKey    string // Your API key.
+	APISecret string // Your API secret.
+	APIURL    string // The API URL you want to send a request to - this should have been provided to you. There are different URLs for testing and production, and for different regions too. This is just the base URL, not the full endpoint. For example: "https://api.demo.payassi.st/".
 }

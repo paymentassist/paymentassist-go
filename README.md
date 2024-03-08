@@ -22,7 +22,7 @@ If an error is returned, the request was unsucessful and the response object wil
 
 Note that `InvoiceRequest` and `CaptureRequest` may return a response and no error even if the request was unsuccessful; specific error data for these is provided in the response.
 
-Every request requires an `AuthInfo` object which contains your API credentials and specifies whether the request should be made against the demo or production API.
+Every request requires an `AuthInfo` object which contains your API credentials and the URL you want to make the request to.
 
 Example usage:
 
@@ -30,7 +30,7 @@ Example usage:
 authInfo := pasdk.AuthInfo{
 	APIKey:    "my_api_key",
 	APISecret: "my_api_secret",
-	IsProduction: true,
+	APIURL: "https://api.demo.payassi.st/",
 }
 
 request := pasdk.AccountRequest{

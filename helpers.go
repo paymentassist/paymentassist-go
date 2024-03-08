@@ -31,23 +31,15 @@ func getRequestURL(authInfo PAAuth) (string, *PASDKError) {
 		return "", nil
 	}
 
-	if !authInfo.IsProduction || shouldRunIntegrationTests() {
-		if strings.Contains(authInfo.APISecret, "prod_") {
-			return "", buildValidationFailedError("you're trying to make a request to the demo API but you've provided a production API secret")
-		}
-
-		return "https://api.demo.payassi.st/", nil
+	if !strings.Contains(authInfo.APIURL, "https:") {
+		return "", buildValidationFailedError("the API URL must contain the string \"https:\"")
 	}
 
-	if authInfo.IsProduction {
-		if strings.Contains(authInfo.APISecret, "demo_") {
-			return "", buildValidationFailedError("you're trying to make a request to the production API but you've provided a demo API secret")
-		}
-
-		return "https://api.v2.payment-assist.co.uk/", nil
+	if authInfo.APIURL[len(authInfo.APIURL)-1:] != "/" {
+		return authInfo.APIURL + "/", nil
 	}
 
-	return "", buildValidationFailedError("authentication was missing or invalid")
+	return authInfo.APIURL, nil
 }
 
 func makeAPIPOSTRequest[T interface{}](formData []string, endpoint string) (*T, *PASDKError) {

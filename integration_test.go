@@ -6,10 +6,18 @@ import (
 	"time"
 )
 
+var authInfo PAAuth
+
 // Run the suite of integration tests, if enabled.
 func Test_IntegrationTests(t *testing.T) {
 	if !shouldRunIntegrationTests() {
 		return
+	}
+
+	authInfo = PAAuth{
+		APISecret: getTestAPISecret(),
+		APIKey:    getTestAPIKey(),
+		APIURL:    "https://api.demo.payassi.st/",
 	}
 
 	accountResponse := testAccount(t)
@@ -27,10 +35,7 @@ func testUpdate(t *testing.T, applicationID string) {
 	amount := 80000
 
 	request := UpdateRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
+		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 		Amount:        &amount,
 	}
@@ -57,10 +62,7 @@ func testUpdate(t *testing.T, applicationID string) {
 	expiresIn := 60 * 10
 
 	request = UpdateRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
+		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 		Amount:        &amount,
 		ExpiresIn:     &expiresIn,
@@ -85,10 +87,7 @@ func testUpdate(t *testing.T, applicationID string) {
 
 func testStatus(t *testing.T, applicationID string) {
 	request := StatusRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
+		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 	}
 
@@ -121,12 +120,9 @@ func testStatus(t *testing.T, applicationID string) {
 
 func testPlan(t *testing.T, accountInfo AccountResponse) {
 	request := PlanRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
-		Amount: 50000,
-		PlanID: &accountInfo.Plans[0].ID,
+		AuthInfo: authInfo,
+		Amount:   50000,
+		PlanID:   &accountInfo.Plans[0].ID,
 	}
 
 	response, err := request.Fetch()
@@ -165,10 +161,7 @@ func testPlan(t *testing.T, accountInfo AccountResponse) {
 
 func testPreapproval(t *testing.T) {
 	request := PreapprovalRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
+		AuthInfo:          authInfo,
 		CustomerFirstName: "Test",
 		CustomerLastName:  "Testington",
 		CustomerAddress1:  "Test House",
@@ -188,10 +181,7 @@ func testPreapproval(t *testing.T) {
 
 func testCapture(t *testing.T, applicationID string) {
 	request := CaptureRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
+		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 	}
 
@@ -206,10 +196,7 @@ func testCapture(t *testing.T, applicationID string) {
 
 func testInvoice(t *testing.T, applicationID string) {
 	request := InvoiceRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
+		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 		FileType:      "txt",
 		FileData:      []byte("Test invoice"),
@@ -217,15 +204,11 @@ func testInvoice(t *testing.T, applicationID string) {
 
 	response, err := request.Fetch()
 
-	if err != nil {
-		t.Error()
-	}
-
 	// Only a completed application can be invoiced so we are expecting this to fail.
-	if response.ApplicationID != applicationID {
-		t.Error()
+	if !strings.Contains(err.Error(), "Application is not yet completed") {
+		t.Error(err.Error())
 	}
-	if response.UploadStatus != "failed" {
+	if response != nil {
 		t.Error()
 	}
 }
@@ -234,10 +217,7 @@ func testBegin(t *testing.T) *BeginResponse {
 	falseValue := false
 
 	request := BeginRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
+		AuthInfo:          authInfo,
 		OrderID:           getRandomID(),
 		Amount:            100000,
 		CustomerFirstName: "Test",
@@ -265,10 +245,7 @@ func testBegin(t *testing.T) *BeginResponse {
 
 func testAccount(t *testing.T) *AccountResponse {
 	request := AccountRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
+		AuthInfo: authInfo,
 	}
 
 	accountResponse, err := request.Fetch()
