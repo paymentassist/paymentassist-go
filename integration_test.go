@@ -6,19 +6,17 @@ import (
 	"time"
 )
 
-var authInfo PAAuth
-
 // Run the suite of integration tests, if enabled.
 func Test_IntegrationTests(t *testing.T) {
 	if !shouldRunIntegrationTests() {
 		return
 	}
 
-	authInfo = PAAuth{
+	Initialise(PAAuth{
 		APISecret: getTestAPISecret(),
 		APIKey:    getTestAPIKey(),
 		APIURL:    "https://api.demo.payassi.st/",
-	}
+	})
 
 	accountResponse := testAccount(t)
 	testPlan(t, *accountResponse)
@@ -35,7 +33,6 @@ func testUpdate(t *testing.T, applicationID string) {
 	amount := 80000
 
 	request := UpdateRequest{
-		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 		Amount:        &amount,
 	}
@@ -62,7 +59,6 @@ func testUpdate(t *testing.T, applicationID string) {
 	expiresIn := 60 * 10
 
 	request = UpdateRequest{
-		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 		Amount:        &amount,
 		ExpiresIn:     &expiresIn,
@@ -87,7 +83,6 @@ func testUpdate(t *testing.T, applicationID string) {
 
 func testStatus(t *testing.T, applicationID string) {
 	request := StatusRequest{
-		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 	}
 
@@ -120,9 +115,8 @@ func testStatus(t *testing.T, applicationID string) {
 
 func testPlan(t *testing.T, accountInfo AccountResponse) {
 	request := PlanRequest{
-		AuthInfo: authInfo,
-		Amount:   50000,
-		PlanID:   &accountInfo.Plans[0].ID,
+		Amount: 50000,
+		PlanID: &accountInfo.Plans[0].ID,
 	}
 
 	response, err := request.Fetch()
@@ -161,7 +155,6 @@ func testPlan(t *testing.T, accountInfo AccountResponse) {
 
 func testPreapproval(t *testing.T) {
 	request := PreapprovalRequest{
-		AuthInfo:          authInfo,
 		CustomerFirstName: "Test",
 		CustomerLastName:  "Testington",
 		CustomerAddress1:  "Test House",
@@ -181,7 +174,6 @@ func testPreapproval(t *testing.T) {
 
 func testCapture(t *testing.T, applicationID string) {
 	request := CaptureRequest{
-		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 	}
 
@@ -196,7 +188,6 @@ func testCapture(t *testing.T, applicationID string) {
 
 func testInvoice(t *testing.T, applicationID string) {
 	request := InvoiceRequest{
-		AuthInfo:      authInfo,
 		ApplicationID: applicationID,
 		FileType:      "txt",
 		FileData:      []byte("Test invoice"),
@@ -217,7 +208,6 @@ func testBegin(t *testing.T) *BeginResponse {
 	falseValue := false
 
 	request := BeginRequest{
-		AuthInfo:          authInfo,
 		OrderID:           getRandomID(),
 		Amount:            100000,
 		CustomerFirstName: "Test",
@@ -244,9 +234,7 @@ func testBegin(t *testing.T) *BeginResponse {
 }
 
 func testAccount(t *testing.T) *AccountResponse {
-	request := AccountRequest{
-		AuthInfo: authInfo,
-	}
+	request := AccountRequest{}
 
 	accountResponse, err := request.Fetch()
 

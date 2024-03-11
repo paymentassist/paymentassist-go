@@ -2,7 +2,6 @@ package pasdk
 
 // BeginRequest begins the application process. Nullable fields are generally optional.
 type BeginRequest struct {
-	AuthInfo            PAAuth  // Authentication information including your API credentials.
 	OrderID             string  // A unique invoice ID or order ID.
 	Amount              int     // The invoice amount in pence.
 	CustomerFirstName   string  // The customer's first name.
@@ -75,12 +74,12 @@ func (request BeginRequest) Fetch() (response *BeginResponse, err *PASDKError) {
 
 	requestParams = removeEmptyParams(requestParams)
 
-	signature := generateSignature(requestParams, request.AuthInfo.APISecret)
+	signature := generateSignature(requestParams, userCredentials.APISecret)
 
-	requestParams = append(requestParams, "api_key="+request.AuthInfo.APIKey)
+	requestParams = append(requestParams, "api_key="+userCredentials.APIKey)
 	requestParams = append(requestParams, "signature="+signature)
 
-	requestURL, err := getRequestURL(request.AuthInfo)
+	requestURL, err := getRequestURL()
 
 	if err != nil {
 		return nil, err.Wrap("failed determining request URL: ")
@@ -123,14 +122,6 @@ func applyBeginDefaults(params BeginRequest) BeginRequest {
 }
 
 func validateBeginRequest(request BeginRequest) (err *PASDKError) {
-	if len(request.AuthInfo.APIKey) == 0 {
-		return buildValidationFailedError("APIKey cannot be empty")
-	}
-
-	if len(request.AuthInfo.APISecret) == 0 {
-		return buildValidationFailedError("APISecret cannot be empty")
-	}
-
 	if len(request.OrderID) == 0 {
 		return buildValidationFailedError("OrderID cannot be empty")
 	}

@@ -10,10 +10,6 @@ func Test_Invoice(t *testing.T) {
 	}
 
 	request := InvoiceRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
 		ApplicationID: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
 		FileType:      "txt",
 		FileData:      []byte("Test invoice for £100"),
@@ -35,18 +31,6 @@ func Test_Invoice(t *testing.T) {
 
 func Test_validateInvoiceRequest(t *testing.T) {
 	request := InvoiceRequest{}
-
-	if validateInvoiceRequest(request).Error() != "APIKey cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APIKey = "test"
-
-	if validateInvoiceRequest(request).Error() != "APISecret cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APISecret = "test"
 
 	if validateInvoiceRequest(request).Error() != "ApplicationID cannot be empty" {
 		t.Error()

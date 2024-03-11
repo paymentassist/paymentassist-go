@@ -10,10 +10,6 @@ func Test_Capture(t *testing.T) {
 	}
 
 	request := CaptureRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
 		ApplicationID: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
 	}
 
@@ -39,18 +35,6 @@ func Test_Capture(t *testing.T) {
 
 func Test_validateCaptureRequest(t *testing.T) {
 	request := CaptureRequest{}
-
-	if validateCaptureRequest(request).Error() != "APIKey cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APIKey = "test"
-
-	if validateCaptureRequest(request).Error() != "APISecret cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APISecret = "test"
 
 	if validateCaptureRequest(request).Error() != "ApplicationID cannot be empty" {
 		t.Error()

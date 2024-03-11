@@ -8,7 +8,6 @@ import (
 
 // UpdateRequest allows you to update an existing application.
 type UpdateRequest struct {
-	AuthInfo      PAAuth  // Authentication information including your API credentials.
 	ApplicationID string  // The application ID (token) you received when calling the "begin" endpoint.
 	OrderID       *string // Your new order ID. You can only change this if the application's status is "completed".
 	ExpiresIn     *int    // The new expiry time for this appication in seconds from now. Setting this to 0 will instantly expire the application. You can only change this if the application's status is "pending", "in_progress" or "pending_capture".
@@ -81,12 +80,12 @@ func (request UpdateRequest) Fetch() (response *UpdateResponse, err *PASDKError)
 
 	requestParams = removeEmptyParams(requestParams)
 
-	signature := generateSignature(requestParams, request.AuthInfo.APISecret)
+	signature := generateSignature(requestParams, userCredentials.APISecret)
 
-	requestParams = append(requestParams, "api_key="+request.AuthInfo.APIKey)
+	requestParams = append(requestParams, "api_key="+userCredentials.APIKey)
 	requestParams = append(requestParams, "signature="+signature)
 
-	requestURL, err := getRequestURL(request.AuthInfo)
+	requestURL, err := getRequestURL()
 
 	if err != nil {
 		return nil, err.Wrap("failed determining request URL: ")
@@ -102,14 +101,6 @@ func (request UpdateRequest) Fetch() (response *UpdateResponse, err *PASDKError)
 }
 
 func validateUpdateRequest(request UpdateRequest) (err *PASDKError) {
-	if len(request.AuthInfo.APIKey) == 0 {
-		return buildValidationFailedError("APIKey cannot be empty")
-	}
-
-	if len(request.AuthInfo.APISecret) == 0 {
-		return buildValidationFailedError("APISecret cannot be empty")
-	}
-
 	if len(request.ApplicationID) == 0 {
 		return buildValidationFailedError("ApplicationID cannot be empty")
 	}

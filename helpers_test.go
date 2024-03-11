@@ -7,6 +7,11 @@ import (
 )
 
 func TestMain(m *testing.M) {
+	Initialise(PAAuth{
+		APISecret: getTestAPISecret(),
+		APIKey:    getTestAPIKey(),
+	})
+
 	testsAreRunning = true
 	os.Exit(m.Run())
 }
@@ -45,21 +50,73 @@ func Test_decodeResponseJSON_DoesntLosePrecision_WhenDeserialisingPlan(t *testin
 	}
 }
 
+func Test_checkCredentialsExist(t *testing.T) {
+	if shouldRunIntegrationTests() {
+		return
+	}
+
+	currentCredentials := userCredentials
+
+	defer func() {
+		Initialise(currentCredentials)
+		testsAreRunning = true
+	}()
+
+	testsAreRunning = false
+	Initialise(PAAuth{})
+
+	if checkCredentialsExist().Error() != "APIKey cannot be empty - call pasdk.Initialise to pass in your credentials" {
+		t.Error()
+	}
+
+	Initialise(PAAuth{
+		APIKey: "test",
+	})
+
+	if checkCredentialsExist().Error() != "APISecret cannot be empty - call pasdk.Initialise to pass in your credentials" {
+		t.Error()
+	}
+
+	Initialise(PAAuth{
+		APIKey:    "test",
+		APISecret: "test",
+	})
+
+	if checkCredentialsExist().Error() != "APIURL cannot be empty - call pasdk.Initialise to pass in the URL you want to send a request to" {
+		t.Error()
+	}
+
+	Initialise(PAAuth{
+		APIKey:    "test",
+		APISecret: "test",
+		APIURL:    "https://test.com",
+	})
+
+	if checkCredentialsExist() != nil {
+		t.Error()
+	}
+}
+
 func Test_getRequestURL(t *testing.T) {
 	if shouldRunIntegrationTests() {
 		return
 	}
 
+	currentCredentials := userCredentials
+
 	defer func() {
 		os.Unsetenv("GO_PASDK_INTEGRATION_TESTS")
+		Initialise(currentCredentials)
 		testsAreRunning = true
 	}()
 
 	testsAreRunning = false
 
-	url, err := getRequestURL(PAAuth{
-		APIURL: "https://testurl"},
-	)
+	Initialise(PAAuth{
+		APIURL: "https://testurl",
+	})
+
+	url, err := getRequestURL()
 
 	if url != "https://testurl/" {
 		t.Error()
@@ -68,10 +125,12 @@ func Test_getRequestURL(t *testing.T) {
 		t.Error()
 	}
 
-	url, err = getRequestURL(PAAuth{
+	Initialise(PAAuth{
 		APIURL: "https://testurl/",
 	})
 
+	url, err = getRequestURL()
+
 	if url != "https://testurl/" {
 		t.Error()
 	}
@@ -79,9 +138,11 @@ func Test_getRequestURL(t *testing.T) {
 		t.Error()
 	}
 
-	url, err = getRequestURL(PAAuth{
+	Initialise(PAAuth{
 		APIURL: "www.testurl",
 	})
+
+	url, err = getRequestURL()
 
 	if url != "" {
 		t.Error()

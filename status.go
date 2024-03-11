@@ -6,7 +6,6 @@ import (
 
 // StatusRequest allows you to check the status of an existing application.
 type StatusRequest struct {
-	AuthInfo      PAAuth // Authentication information including your API credentials.
 	ApplicationID string // The application ID (token) you received when calling the "begin" endpoint.
 }
 
@@ -37,12 +36,12 @@ func (request StatusRequest) Fetch() (response *StatusResponse, err *PASDKError)
 
 	requestParams = removeEmptyParams(requestParams)
 
-	signature := generateSignature(requestParams, request.AuthInfo.APISecret)
+	signature := generateSignature(requestParams, userCredentials.APISecret)
 
-	requestParams = append(requestParams, "api_key="+request.AuthInfo.APIKey)
+	requestParams = append(requestParams, "api_key="+userCredentials.APIKey)
 	requestParams = append(requestParams, "signature="+signature)
 
-	requestURL, err := getRequestURL(request.AuthInfo)
+	requestURL, err := getRequestURL()
 
 	if err != nil {
 		return nil, err.Wrap("failed determining request URL: ")
@@ -58,14 +57,6 @@ func (request StatusRequest) Fetch() (response *StatusResponse, err *PASDKError)
 }
 
 func validateStatusRequest(request StatusRequest) (err *PASDKError) {
-	if len(request.AuthInfo.APIKey) == 0 {
-		return buildValidationFailedError("APIKey cannot be empty")
-	}
-
-	if len(request.AuthInfo.APISecret) == 0 {
-		return buildValidationFailedError("APISecret cannot be empty")
-	}
-
 	if len(request.ApplicationID) == 0 {
 		return buildValidationFailedError("ApplicationID cannot be empty")
 	}

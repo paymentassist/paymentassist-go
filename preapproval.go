@@ -5,7 +5,6 @@ package pasdk
 // will still need to have funds available to cover any deposit payment for
 // the application to be successful.
 type PreapprovalRequest struct {
-	AuthInfo          PAAuth // Authentication information including your API credentials.
 	CustomerFirstName string // The customer's first name.
 	CustomerLastName  string // The customer's last name.
 	CustomerPostcode  string // The customer's postode.
@@ -36,12 +35,12 @@ func (request PreapprovalRequest) Fetch() (response *PreapprovalResponse, err *P
 
 	requestParams = removeEmptyParams(requestParams)
 
-	signature := generateSignature(requestParams, request.AuthInfo.APISecret)
+	signature := generateSignature(requestParams, userCredentials.APISecret)
 
-	requestParams = append(requestParams, "api_key="+request.AuthInfo.APIKey)
+	requestParams = append(requestParams, "api_key="+userCredentials.APIKey)
 	requestParams = append(requestParams, "signature="+signature)
 
-	requestURL, err := getRequestURL(request.AuthInfo)
+	requestURL, err := getRequestURL()
 
 	if err != nil {
 		return nil, err.Wrap("failed determining request URL: ")
@@ -57,14 +56,6 @@ func (request PreapprovalRequest) Fetch() (response *PreapprovalResponse, err *P
 }
 
 func validatePreapprovalRequest(request PreapprovalRequest) (err *PASDKError) {
-	if len(request.AuthInfo.APIKey) == 0 {
-		return buildValidationFailedError("APIKey cannot be empty")
-	}
-
-	if len(request.AuthInfo.APISecret) == 0 {
-		return buildValidationFailedError("APISecret cannot be empty")
-	}
-
 	if len(request.CustomerFirstName) == 0 {
 		return buildValidationFailedError("CustomerFirstName cannot be empty")
 	}

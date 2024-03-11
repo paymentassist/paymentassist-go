@@ -16,27 +16,28 @@ Officially, Go v1.19 and beyond is supported, but the SDK might also work on v1.
 
 The full API reference can be found here: https://api-docs.payment-assist.co.uk/.
 
-The way to use this SDK is by creating a request object for the action you want to perform, followed by calling the `Fetch()` method on it. `Fetch()` returns a response object and an error.
+To use this SDK, first start by initialising it with the `Initialise` function, which takes your API credentials as well as the PaymentAssist API URL you want to make requests to.
 
-If an error is returned, the request was unsucessful and the response object will be `nil`. The error is a custom type that contains detailed information about what happened. Of note are the fields `IsRequestRefusedError`, `IsValidationFailedError` and `IsUnexpectedError`. In the case of failure you may want to use these to decide whether or not to retry the request. You don't have to use these though and there is no harm in retrying all errors. See the code comments for more information on what these error types mean.
+```
+pasdk.Initialise(pasdk.AuthInfo{
+	APIKey:    "my_api_key",
+	APISecret: "my_api_secret",
+	APIURL: "https://api.demo.payassi.st/,
+})
+```
+
+Note that it is not recommended to hard-code your API credentials like in the above example, this is just for illustration purposes.
+
+After this, you can create a request object for the action you want to perform, followed by calling the `Fetch()` method on it. `Fetch()` returns a response object and an error.
+
+If an error is returned, the request was unsucessful and the response object will be `nil`. The error is a custom type that contains detailed information about what happened. Of note are the fields `IsRequestRefusedError`, `IsValidationFailedError` and `IsUnexpectedError`. In the case of failure you may want to use these to decide whether or not to retry the request. However, you don't have to use these, and there is no harm in retrying all errors. See the code comments for more information on what these error types mean.
 
 Note that `InvoiceRequest` and `CaptureRequest` may return a response and no error even if the request was unsuccessful; specific error data for these is provided in the response.
 
-Every request requires an `AuthInfo` object which contains your API credentials and the URL you want to make the request to.
-
-Example usage:
+Example:
 
 ```
-authInfo := pasdk.AuthInfo{
-	APIKey:    "my_api_key",
-	APISecret: "my_api_secret",
-	APIURL: "https://api.demo.payassi.st/",
-}
-
-request := pasdk.AccountRequest{
-	AuthInfo: authInfo,
-}
-
+request := pasdk.AccountRequest{}
 accountResponse, err := request.Fetch()
 
 if err != nil {
@@ -47,8 +48,6 @@ if err != nil {
 // Print the dealer's display name.
 fmt.Println(accountResponse.DisplayName)
 ```
-
-Note that it is not recommended to hard-code your API credentials like in the above example, this is just for illustration purposes.
 
 The following actions are available:
 

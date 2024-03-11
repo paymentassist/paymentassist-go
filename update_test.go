@@ -14,10 +14,6 @@ func Test_Update(t *testing.T) {
 	expiresIn := 600
 
 	request := UpdateRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
 		ApplicationID: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
 		Amount:        &amount,
 		OrderID:       &orderID,
@@ -46,18 +42,6 @@ func Test_Update(t *testing.T) {
 
 func Test_validateUpdateRequest(t *testing.T) {
 	request := StatusRequest{}
-
-	if validateStatusRequest(request).Error() != "APIKey cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APIKey = "test"
-
-	if validateStatusRequest(request).Error() != "APISecret cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APISecret = "test"
 
 	if validateStatusRequest(request).Error() != "ApplicationID cannot be empty" {
 		t.Error()

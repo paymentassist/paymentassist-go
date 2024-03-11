@@ -26,23 +26,45 @@ func getAPIRequestClient() *http.Client {
 	return requestClient
 }
 
-func getRequestURL(authInfo PAAuth) (string, *PASDKError) {
+func getRequestURL() (string, *PASDKError) {
 	if testsAreRunning && !shouldRunIntegrationTests() {
 		return "", nil
 	}
 
-	if !strings.Contains(authInfo.APIURL, "https:") {
+	if !strings.Contains(userCredentials.APIURL, "https:") {
 		return "", buildValidationFailedError("the API URL must contain the string \"https:\"")
 	}
 
-	if authInfo.APIURL[len(authInfo.APIURL)-1:] != "/" {
-		return authInfo.APIURL + "/", nil
+	if userCredentials.APIURL[len(userCredentials.APIURL)-1:] != "/" {
+		return userCredentials.APIURL + "/", nil
 	}
 
-	return authInfo.APIURL, nil
+	return userCredentials.APIURL, nil
+}
+
+// Returns an error if there is an issue with the credentials.
+func checkCredentialsExist() *PASDKError {
+	if len(userCredentials.APIKey) == 0 {
+		return buildValidationFailedError("APIKey cannot be empty - call pasdk.Initialise to pass in your credentials")
+	}
+	if len(userCredentials.APISecret) == 0 {
+		return buildValidationFailedError("APISecret cannot be empty - call pasdk.Initialise to pass in your credentials")
+	}
+
+	if !testsAreRunning && len(userCredentials.APIURL) == 0 {
+		return buildValidationFailedError("APIURL cannot be empty - call pasdk.Initialise to pass in the URL you want to send a request to")
+	}
+
+	return nil
 }
 
 func makeAPIPOSTRequest[T interface{}](formData []string, endpoint string) (*T, *PASDKError) {
+	paErr := checkCredentialsExist()
+
+	if paErr != nil {
+		return nil, paErr
+	}
+
 	formValues := url.Values{}
 
 	for _, data := range formData {
@@ -78,7 +100,7 @@ func makeAPIPOSTRequest[T interface{}](formData []string, endpoint string) (*T, 
 		return nil, buildUnexpectedError("reading API response failed: " + err.Error())
 	}
 
-	paErr := checkStatusCode(response.StatusCode, string(body))
+	paErr = checkStatusCode(response.StatusCode, string(body))
 
 	if paErr != nil {
 		return nil, paErr
@@ -111,6 +133,12 @@ func checkStatusCode(statusCode int, requestBody string) *PASDKError {
 }
 
 func makeAPIGETRequest[T interface{}](formData []string, endpoint string) (*T, *PASDKError) {
+	paErr := checkCredentialsExist()
+
+	if paErr != nil {
+		return nil, paErr
+	}
+
 	endpoint += "?"
 
 	for _, data := range formData {
@@ -148,7 +176,7 @@ func makeAPIGETRequest[T interface{}](formData []string, endpoint string) (*T, *
 		return nil, buildUnexpectedError("reading API response failed: " + err.Error())
 	}
 
-	paErr := checkStatusCode(response.StatusCode, string(body))
+	paErr = checkStatusCode(response.StatusCode, string(body))
 
 	if paErr != nil {
 		return nil, paErr

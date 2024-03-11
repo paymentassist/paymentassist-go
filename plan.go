@@ -3,9 +3,8 @@ package pasdk
 // PlanRequest accepts a transaction amount and an optional plan ID and term length,
 // returning a full payment schedule including amounts and dates.
 type PlanRequest struct {
-	AuthInfo PAAuth // Authentication information including your API credentials.
-	Amount   int    // The invoice amount in pence.
-	PlanID   *int   // The plan ID. If empty, the account's default plan is used.
+	Amount int  // The invoice amount in pence.
+	PlanID *int // The plan ID. If empty, the account's default plan is used.
 }
 
 // PlanResponse contains the data returned by a successful call to the "plan" endpoint.
@@ -34,12 +33,12 @@ func (request PlanRequest) Fetch() (response *PlanResponse, err *PASDKError) {
 
 	requestParams = removeEmptyParams(requestParams)
 
-	signature := generateSignature(requestParams, request.AuthInfo.APISecret)
+	signature := generateSignature(requestParams, userCredentials.APISecret)
 
-	requestParams = append(requestParams, "api_key="+request.AuthInfo.APIKey)
+	requestParams = append(requestParams, "api_key="+userCredentials.APIKey)
 	requestParams = append(requestParams, "signature="+signature)
 
-	requestURL, err := getRequestURL(request.AuthInfo)
+	requestURL, err := getRequestURL()
 
 	if err != nil {
 		return nil, err.Wrap("failed determining request URL: ")
@@ -55,14 +54,6 @@ func (request PlanRequest) Fetch() (response *PlanResponse, err *PASDKError) {
 }
 
 func validatePlanRequest(request PlanRequest) (err *PASDKError) {
-	if len(request.AuthInfo.APIKey) == 0 {
-		return buildValidationFailedError("APIKey cannot be empty")
-	}
-
-	if len(request.AuthInfo.APISecret) == 0 {
-		return buildValidationFailedError("APISecret cannot be empty")
-	}
-
 	if request.Amount == 0 {
 		return buildValidationFailedError("field Amount must be greater than 0")
 	}

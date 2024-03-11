@@ -10,10 +10,6 @@ func Test_Preapproval(t *testing.T) {
 	}
 
 	request := PreapprovalRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
 		CustomerFirstName: "Test",
 		CustomerLastName:  "Testington",
 		CustomerAddress1:  "Test House",
@@ -33,18 +29,6 @@ func Test_Preapproval(t *testing.T) {
 
 func Test_validatePreapprovalRequest(t *testing.T) {
 	request := PreapprovalRequest{}
-
-	if validatePreapprovalRequest(request).Error() != "APIKey cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APIKey = "test"
-
-	if validatePreapprovalRequest(request).Error() != "APISecret cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APISecret = "test"
 
 	if validatePreapprovalRequest(request).Error() != "CustomerFirstName cannot be empty" {
 		t.Error()

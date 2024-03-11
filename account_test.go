@@ -9,12 +9,7 @@ func Test_Account(t *testing.T) {
 		return
 	}
 
-	request := AccountRequest{
-		AuthInfo: PAAuth{
-			APISecret: getTestAPISecret(),
-			APIKey:    getTestAPIKey(),
-		},
-	}
+	request := AccountRequest{}
 
 	response, err := request.Fetch()
 
@@ -89,26 +84,6 @@ func Test_Account(t *testing.T) {
 		t.Error()
 	}
 	if *response.Plans[1].CommissionFixedFee != 5000 {
-		t.Error()
-	}
-}
-
-func Test_validateAccountRequest(t *testing.T) {
-	request := AccountRequest{}
-
-	if validateAccountRequest(request).Error() != "APIKey cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APIKey = "test"
-
-	if validateAccountRequest(request).Error() != "APISecret cannot be empty" {
-		t.Error()
-	}
-
-	request.AuthInfo.APISecret = "test"
-
-	if validateAccountRequest(request) != nil {
 		t.Error()
 	}
 }
