@@ -260,7 +260,7 @@ func testAccount(t *testing.T) *AccountResponse {
 	if len(accountResponse.Plans[0].Name) == 0 {
 		t.Error()
 	}
-	if accountResponse.Plans[0].Deposit == false {
+	if accountResponse.Plans[0].DepositRequired == false {
 		t.Error()
 	}
 	if accountResponse.Plans[0].ID == 0 {

@@ -34,7 +34,7 @@ func Test_Account(t *testing.T) {
 	if response.Plans[0].Instalments != 3 {
 		t.Error()
 	}
-	if response.Plans[0].Deposit != true {
+	if response.Plans[0].DepositRequired != true {
 		t.Error()
 	}
 	if response.Plans[0].APR != "0" {
@@ -65,7 +65,7 @@ func Test_Account(t *testing.T) {
 	if response.Plans[1].Instalments != 4 {
 		t.Error()
 	}
-	if response.Plans[1].Deposit != false {
+	if response.Plans[1].DepositRequired != false {
 		t.Error()
 	}
 	if response.Plans[1].APR != "5.5" {

@@ -60,7 +60,7 @@ type Plan struct {
 	ID                 int    `json:"plan_id"`              // The ID of this plan.
 	Name               string `json:"name"`                 // The name of this plan.
 	Instalments        int    `json:"instalments"`          // The number of instalments in this plan.
-	Deposit            bool   `json:"deposit"`              // Whether a deposit is required by this plan (first payment taken immediately).
+	DepositRequired    bool   `json:"deposit"`              // Whether a deposit is required by this plan (first payment taken immediately).
 	APR                string `json:"apr"`                  // The annual percentage interest rate of this plan.
 	Frequency          string `json:"frequency"`            // How often payments are made on this plan.
 	MinAmount          *int   `json:"min_amount"`           // The minimum amount allowed under this plan in pence, if any.
