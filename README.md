@@ -26,7 +26,7 @@ To use this SDK, first start by initialising it with the `Initialise` function, 
 pasdk.Initialise(pasdk.AuthInfo{
 	APIKey:    "my_api_key",
 	APISecret: "my_api_secret",
-	APIURL: "https://api.demo.payassi.st/,
+	APIURL: "https://api.demo.payassi.st/",
 })
 ```
 
