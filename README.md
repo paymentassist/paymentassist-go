@@ -69,7 +69,7 @@ The following actions are available:
 ## Notes
 
 
-As virtually all requests to the API should return immediately, there is currently no support for cancelling an ongoing request. There is a hard-coded timeout of 30 seconds per request.
+As virtually all requests to the API should return immediately (apart from /capture, which can take a few seconds to process deposits), there is currently no support for cancelling an ongoing request. There is a hard-coded timeout of 30 seconds per request which should be sufficient in all scenarios.
 
 ## Support
 
