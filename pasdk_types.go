@@ -55,6 +55,7 @@ func (err PASDKError) GetErrorType() string {
 	return ""
 }
 
+// Plan represents the basic characteristics of a given repayment plan.
 type Plan struct {
 	ID                 int    `json:"plan_id"`              // The ID of this plan.
 	Name               string `json:"name"`                 // The name of this plan.
