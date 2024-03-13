@@ -270,7 +270,7 @@ func testAccount(t *testing.T) *AccountResponse {
 		t.Error()
 	}
 	if accountResponse.Plans[0].MaxAmount == nil ||
-		*accountResponse.Plans[0].MaxAmount == 0 {
+		*accountResponse.Plans[0].MaxAmount <= 0 {
 		t.Error()
 	}
 

@@ -54,7 +54,7 @@ func (request PlanRequest) Fetch() (response *PlanResponse, err *PASDKError) {
 }
 
 func validatePlanRequest(request PlanRequest) (err *PASDKError) {
-	if request.Amount == 0 {
+	if request.Amount <= 0 {
 		return buildValidationFailedError("field Amount must be greater than 0")
 	}
 
