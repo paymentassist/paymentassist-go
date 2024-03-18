@@ -1,5 +1,3 @@
-# This SDK is undergoing testing and has not been released!
-
 # paymentassist-go
 
 The official Go SDK for the Payment Assist Merchant API.
