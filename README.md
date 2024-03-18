@@ -12,7 +12,7 @@ Officially, Go v1.19 and beyond is supported, but the SDK might also work on v1.
 
 ```
 import (
-	pasdk "github.com/paymentassist/paymentassist-go"
+    pasdk "github.com/paymentassist/paymentassist-go"
 )
 ```
 
@@ -28,9 +28,9 @@ To use this SDK, first start by initialising it with the `Initialise` function, 
 
 ```
 pasdk.Initialise(pasdk.AuthInfo{
-	APIKey:    "my_api_key",
-	APISecret: "my_api_secret",
-	APIURL: "https://api.demo.payassi.st/",
+    APIKey:    "my_api_key",
+    APISecret: "my_api_secret",
+    APIURL: "https://api.demo.payassi.st/",
 })
 ```
 
@@ -50,7 +50,7 @@ accountResponse, err := request.Fetch()
 
 if err != nil {
     fmt.Println("There was an error: "+err.Error())
-	return
+    return
 }
 
 // Print the dealer's display name.
