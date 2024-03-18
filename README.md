@@ -12,6 +12,12 @@ Officially, Go v1.19 and beyond is supported, but the SDK might also work on v1.
 
 `go get github.com/paymentassist/paymentassist-go`
 
+```
+import (
+	pasdk "github.com/paymentassist/paymentassist-go"
+)
+```
+
 ## Workflow
 
 ![Payment Assist API Workflow](https://raw.githubusercontent.com/paymentassist/paymentassist-php/master/api-workflow.png "API Workflow")
