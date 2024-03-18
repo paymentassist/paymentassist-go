@@ -24,7 +24,7 @@ import (
 
 The full API reference can be found here: https://api-docs.payment-assist.co.uk/.
 
-To use this SDK, first start by initialising it with the `Initialise` function, which takes your API credentials as well as the PaymentAssist API URL you want to make requests to.
+To use this SDK, first start by initialising it with the `Initialise` function, which takes your API credentials as well as the Payment Assist API URL you want to make requests to.
 
 ```
 pasdk.Initialise(pasdk.AuthInfo{
