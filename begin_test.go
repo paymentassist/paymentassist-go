@@ -25,7 +25,7 @@ func Test_Begin(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(response.ApplicationID) != 36 {
+	if len(response.ApplicationToken) != 36 {
 		t.Error()
 	}
 

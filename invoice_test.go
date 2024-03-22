@@ -10,9 +10,9 @@ func Test_Invoice(t *testing.T) {
 	}
 
 	request := InvoiceRequest{
-		ApplicationID: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
-		FileType:      "txt",
-		FileData:      []byte("Test invoice for £100"),
+		ApplicationToken: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
+		FileType:         "txt",
+		FileData:         []byte("Test invoice for £100"),
 	}
 
 	response, err := request.Fetch()
@@ -21,7 +21,7 @@ func Test_Invoice(t *testing.T) {
 		t.Error(err)
 	}
 
-	if response.ApplicationID != "aed3bd4e-c478-4d73-a6fa-3640a7155e4f" {
+	if response.ApplicationToken != "aed3bd4e-c478-4d73-a6fa-3640a7155e4f" {
 		t.Error()
 	}
 	if response.UploadStatus != "success" {
@@ -32,11 +32,11 @@ func Test_Invoice(t *testing.T) {
 func Test_validateInvoiceRequest(t *testing.T) {
 	request := InvoiceRequest{}
 
-	if validateInvoiceRequest(request).Error() != "ApplicationID cannot be empty" {
+	if validateInvoiceRequest(request).Error() != "ApplicationToken cannot be empty" {
 		t.Error()
 	}
 
-	request.ApplicationID = "test"
+	request.ApplicationToken = "test"
 
 	if validateInvoiceRequest(request).Error() != "FileType cannot be empty" {
 		t.Error(validateInvoiceRequest(request).Error())

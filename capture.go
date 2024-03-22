@@ -2,13 +2,13 @@ package pasdk
 
 // CaptureRequest allows you to finalise an application that's currently in a "pending_capture" state.
 type CaptureRequest struct {
-	ApplicationID string // The application ID (token) you received when calling the "begin" endpoint.
+	ApplicationToken string // The token you received when calling the "begin" endpoint.
 }
 
 // CaptureResponse contains the data returned by a call to the "capture" endpoint. Unlike some other
 // endpoints, "capture" can return a response even when unsuccessful.
 type CaptureResponse struct {
-	ApplicationID               string  `json:"token"`            // The ID (token) of this application.
+	ApplicationToken            string  `json:"token"`            // The token representing this application.
 	Status                      string  `json:"status"`           // The status of this application after the application was captured.
 	DepositCaptured             *bool   `json:"deposit_captured"` // Indicates whether the deposit was successfully captured. This is always nil if the application does not include a deposit.
 	DepositCaptureFailureReason *string `json:"deposit_reason"`   // If DepositCaptured is false, this contains the reason for capture failure. This is nil in all other situations.
@@ -25,7 +25,7 @@ func (request CaptureRequest) Fetch() (response *CaptureResponse, err *PASDKErro
 	}
 
 	requestParams := []string{
-		"token=" + toString(request.ApplicationID),
+		"token=" + toString(request.ApplicationToken),
 	}
 
 	requestParams = removeEmptyParams(requestParams)
@@ -51,8 +51,8 @@ func (request CaptureRequest) Fetch() (response *CaptureResponse, err *PASDKErro
 }
 
 func validateCaptureRequest(request CaptureRequest) (err *PASDKError) {
-	if len(request.ApplicationID) == 0 {
-		return buildValidationFailedError("ApplicationID cannot be empty")
+	if len(request.ApplicationToken) == 0 {
+		return buildValidationFailedError("ApplicationToken cannot be empty")
 	}
 
 	return nil

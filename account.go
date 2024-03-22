@@ -5,9 +5,9 @@ type AccountRequest struct{}
 
 // AccountResponse contains the data returned by a successful call to the "account" endpoint.
 type AccountResponse struct {
-	LegalName   string `json:"legal_name"`   // The legal name of the dealer.
-	DisplayName string `json:"display_name"` // The display name of the dealer.
-	Plans       []Plan `json:"plans"`        // A list of available plan types for this dealer.
+	LegalName   string `json:"legal_name"`   // The legal name of the merchant.
+	DisplayName string `json:"display_name"` // The display name of the merchant.
+	Plans       []Plan `json:"plans"`        // A list of available plan types for this merchant.
 }
 
 // Fetch executes the request.

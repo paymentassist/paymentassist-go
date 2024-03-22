@@ -150,8 +150,8 @@ func getMockAPIResponse[T interface{}](endpoint string) (*T, *PASDKError) {
 				"status": "ok",
 				"msg": null,
 				"data": {
-					"legal_name": "Test Dealer",
-					"display_name": "Test Dealer",
+					"legal_name": "Test Merchant",
+					"display_name": "Test Merchant",
 					"plans": [
 						{
 							"plan_id": 6,

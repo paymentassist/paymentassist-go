@@ -11,7 +11,7 @@ func Test_Status(t *testing.T) {
 	}
 
 	request := StatusRequest{
-		ApplicationID: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
+		ApplicationToken: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
 	}
 
 	response, err := request.Fetch()
@@ -20,7 +20,7 @@ func Test_Status(t *testing.T) {
 		t.Error(err)
 	}
 
-	if response.ApplicationID != "aed3bd4e-c478-4d73-a6fa-3640a7155e4f" {
+	if response.ApplicationToken != "aed3bd4e-c478-4d73-a6fa-3640a7155e4f" {
 		t.Error()
 	}
 	if response.Status != "pending" {
@@ -50,11 +50,11 @@ func Test_Status(t *testing.T) {
 func Test_validateStatusRequest(t *testing.T) {
 	request := StatusRequest{}
 
-	if validateStatusRequest(request).Error() != "ApplicationID cannot be empty" {
+	if validateStatusRequest(request).Error() != "ApplicationToken cannot be empty" {
 		t.Error()
 	}
 
-	request.ApplicationID = "test"
+	request.ApplicationToken = "test"
 
 	if validateStatusRequest(request) != nil {
 		t.Error()

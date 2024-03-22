@@ -6,17 +6,17 @@ import (
 
 // StatusRequest allows you to check the status of an existing application.
 type StatusRequest struct {
-	ApplicationID string // The application ID (token) you received when calling the "begin" endpoint.
+	ApplicationToken string // The token you received when calling the "begin" endpoint.
 }
 
 // StatusResponse contains the data returned by a successful call to the "status" endpoint.
 type StatusResponse struct {
-	ApplicationID          string    `json:"token"`            // The ID (token) of this application.
+	ApplicationToken       string    `json:"token"`            // The token representing this application.
 	Status                 string    `json:"status"`           // The status of this application.
 	Amount                 int       `json:"amount"`           // The amount being applied for, in pence.
 	ExpiresAt              time.Time `json:"expires_at"`       // The time this application expires.
-	PaymentAssistReference string    `json:"pa_ref"`           // Payment Assist's internal reference code for this application. This might be empty as an internal reference is not generated as soon as the application is started.
-	RequriesInvoice        bool      `json:"requires_invoice"` // Whether an invoice needs to be uploaded for this application before payment can be made to the dealer.
+	PaymentAssistReference string    `json:"pa_ref"`           // Payment Assist's reference for this application. This may be empty as a reference is not generated until the finance facility or payment is successfully created (once an application moves to a "completed" status).
+	RequriesInvoice        bool      `json:"requires_invoice"` // Whether an invoice needs to be uploaded for this application before funds will be released to the merchant.
 	HasInvoice             bool      `json:"has_invoice"`      // Whether an invoice has been uploaded for this application.
 }
 
@@ -31,7 +31,7 @@ func (request StatusRequest) Fetch() (response *StatusResponse, err *PASDKError)
 	}
 
 	requestParams := []string{
-		"token=" + request.ApplicationID,
+		"token=" + request.ApplicationToken,
 	}
 
 	requestParams = removeEmptyParams(requestParams)
@@ -57,8 +57,8 @@ func (request StatusRequest) Fetch() (response *StatusResponse, err *PASDKError)
 }
 
 func validateStatusRequest(request StatusRequest) (err *PASDKError) {
-	if len(request.ApplicationID) == 0 {
-		return buildValidationFailedError("ApplicationID cannot be empty")
+	if len(request.ApplicationToken) == 0 {
+		return buildValidationFailedError("ApplicationToken cannot be empty")
 	}
 
 	return nil
