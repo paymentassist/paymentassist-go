@@ -22,8 +22,8 @@ func Test_decodeResponseJSON_DoesntLosePrecision_WhenDeserialisingPlan(t *testin
 			"status": "ok",
 			"msg": null,
 			"data": {
-				"legal_name": "Test Dealer",
-				"display_name": "Test Dealer",
+				"legal_name": "Test Merchant",
+				"display_name": "Test Merchant",
 				"plans": [
 					{
 						"plan_id": 6,

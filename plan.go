@@ -1,6 +1,6 @@
 package pasdk
 
-// PlanRequest accepts a transaction amount and an optional plan ID and term length,
+// PlanRequest accepts a transaction amount and an optional plan ID,
 // returning a full payment schedule including amounts and dates.
 type PlanRequest struct {
 	Amount int  // The invoice amount in pence.

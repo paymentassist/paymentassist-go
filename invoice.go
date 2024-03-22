@@ -6,16 +6,16 @@ import (
 
 // InvoiceRequest allows you to upload an invoice for a completed application.
 type InvoiceRequest struct {
-	ApplicationID string // The application ID (token) you received when calling the "begin" endpoint.
-	FileType      string // The file type. Some supported options are "pdf", "html", "txt", "doc" and "xls".
-	FileData      []byte // The file as a slice of bytes.
+	ApplicationToken string // The token you received when calling the "begin" endpoint.
+	FileType         string // The file type. Some supported options are "pdf", "html", "txt", "doc" and "xls".
+	FileData         []byte // The file as a slice of bytes.
 }
 
 // InvoiceResponse contains the data returned by a call to the "invoice" endpoint. Unlike some
 // endpoints, "invoice" can return a response even if the upload was unsuccessful.
 type InvoiceResponse struct {
-	ApplicationID string `json:"token"`         // The ID (token) of this application.
-	UploadStatus  string `json:"upload_status"` // The status of the upload ("success" or "failed").
+	ApplicationToken string `json:"token"`         // The token representing this application.
+	UploadStatus     string `json:"upload_status"` // The status of the upload ("success" or "failed").
 }
 
 // Fetch executes the request.
@@ -31,7 +31,7 @@ func (request InvoiceRequest) Fetch() (response *InvoiceResponse, err *PASDKErro
 	requestParams := []string{
 		"filedata=" + base64.StdEncoding.EncodeToString(request.FileData),
 		"filetype=" + request.FileType,
-		"token=" + request.ApplicationID,
+		"token=" + request.ApplicationToken,
 	}
 
 	requestParams = removeEmptyParams(requestParams)
@@ -57,8 +57,8 @@ func (request InvoiceRequest) Fetch() (response *InvoiceResponse, err *PASDKErro
 }
 
 func validateInvoiceRequest(request InvoiceRequest) (err *PASDKError) {
-	if len(request.ApplicationID) == 0 {
-		return buildValidationFailedError("ApplicationID cannot be empty")
+	if len(request.ApplicationToken) == 0 {
+		return buildValidationFailedError("ApplicationToken cannot be empty")
 	}
 
 	if len(request.FileType) == 0 {

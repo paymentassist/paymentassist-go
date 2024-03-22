@@ -22,19 +22,19 @@ func Test_IntegrationTests(t *testing.T) {
 	testPlan(t, *accountResponse)
 	testPreapproval(t)
 	beginResponse := testBegin(t)
-	testStatus(t, beginResponse.ApplicationID)
-	testUpdate(t, beginResponse.ApplicationID)
-	testCapture(t, beginResponse.ApplicationID)
-	testInvoice(t, beginResponse.ApplicationID)
+	testStatus(t, beginResponse.ApplicationToken)
+	testUpdate(t, beginResponse.ApplicationToken)
+	testCapture(t, beginResponse.ApplicationToken)
+	testInvoice(t, beginResponse.ApplicationToken)
 }
 
-func testUpdate(t *testing.T, applicationID string) {
+func testUpdate(t *testing.T, token string) {
 	// Test only updating some fields.
 	amount := 80000
 
 	request := UpdateRequest{
-		ApplicationID: applicationID,
-		Amount:        &amount,
+		ApplicationToken: token,
+		Amount:           &amount,
 	}
 
 	response, err := request.Fetch()
@@ -59,9 +59,9 @@ func testUpdate(t *testing.T, applicationID string) {
 	expiresIn := 60 * 10
 
 	request = UpdateRequest{
-		ApplicationID: applicationID,
-		Amount:        &amount,
-		ExpiresIn:     &expiresIn,
+		ApplicationToken: token,
+		Amount:           &amount,
+		ExpiresIn:        &expiresIn,
 	}
 
 	response, err = request.Fetch()
@@ -81,9 +81,9 @@ func testUpdate(t *testing.T, applicationID string) {
 	}
 }
 
-func testStatus(t *testing.T, applicationID string) {
+func testStatus(t *testing.T, token string) {
 	request := StatusRequest{
-		ApplicationID: applicationID,
+		ApplicationToken: token,
 	}
 
 	response, err := request.Fetch()
@@ -99,7 +99,7 @@ func testStatus(t *testing.T, applicationID string) {
 		response.ExpiresAt.After(time.Now().Add(time.Hour*25)) {
 		t.Error(response.ExpiresAt)
 	}
-	if response.ApplicationID != applicationID {
+	if response.ApplicationToken != token {
 		t.Error()
 	}
 	if response.HasInvoice != false {
@@ -172,9 +172,9 @@ func testPreapproval(t *testing.T) {
 	}
 }
 
-func testCapture(t *testing.T, applicationID string) {
+func testCapture(t *testing.T, token string) {
 	request := CaptureRequest{
-		ApplicationID: applicationID,
+		ApplicationToken: token,
 	}
 
 	_, err := request.Fetch()
@@ -186,11 +186,11 @@ func testCapture(t *testing.T, applicationID string) {
 	}
 }
 
-func testInvoice(t *testing.T, applicationID string) {
+func testInvoice(t *testing.T, token string) {
 	request := InvoiceRequest{
-		ApplicationID: applicationID,
-		FileType:      "txt",
-		FileData:      []byte("Test invoice"),
+		ApplicationToken: token,
+		FileType:         "txt",
+		FileData:         []byte("Test invoice"),
 	}
 
 	response, err := request.Fetch()
@@ -223,7 +223,7 @@ func testBegin(t *testing.T) *BeginResponse {
 		t.Error(err)
 	}
 
-	if len(response.ApplicationID) != 36 {
+	if len(response.ApplicationToken) != 36 {
 		t.Error()
 	}
 	if len(response.ContinuationURL) < 10 {

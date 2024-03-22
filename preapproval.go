@@ -3,7 +3,7 @@ package pasdk
 // PreapprovalRequest allows you to check the eligibity of a customer in advance.
 // Success simply means that the customer has passed our internal checks. They
 // will still need to have funds available to cover any deposit payment for
-// the application to be successful.
+// the application to be successful and pass a credit check (if required).
 type PreapprovalRequest struct {
 	CustomerFirstName string // The customer's first name.
 	CustomerLastName  string // The customer's last name.

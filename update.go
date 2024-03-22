@@ -8,18 +8,18 @@ import (
 
 // UpdateRequest allows you to update an existing application.
 type UpdateRequest struct {
-	ApplicationID string  // The application ID (token) you received when calling the "begin" endpoint.
-	OrderID       *string // Your new order ID. You can only change this if the application's status is "completed".
-	ExpiresIn     *int    // The new expiry time for this appication in seconds from now. Setting this to 0 will instantly expire the application. You can only change this if the application's status is "pending", "in_progress" or "pending_capture".
-	Amount        *int    // The new amount for this application in pence. You can only change this if the application's status is "pending", "in_progress" or "pending_capture". The new amount must be less than the current amount.
+	ApplicationToken string  // The token you received when calling the "begin" endpoint.
+	OrderID          *string // Your new order ID. You can only change this if the application's status is "completed".
+	ExpiresIn        *int    // The new expiry time for this appication in seconds from now. Setting this to 0 will instantly expire the application. You can only change this if the application's status is "pending", "in_progress" or "pending_capture".
+	Amount           *int    // The new amount for this application in pence. You can only change this if the application's status is "pending", "in_progress" or "pending_capture". The new amount must be less than the current amount.
 }
 
 // UpdateResponse contains the data returned by a successful call to the "update" endpoint.
 type UpdateResponse struct {
-	ApplicationID string  `json:"token"`    // The ID (token) of this application.
-	OrderID       *string `json:"order_id"` // The new order ID you requested, if any.
-	ExpiresIn     *int    `json:"expiry"`   // The new expiry time you requested in seconds, if any.
-	Amount        *int    `json:"amount"`   // The new amount you requested in pence, if any.
+	ApplicationToken string  `json:"token"`    // The token representing this application.
+	OrderID          *string `json:"order_id"` // The new order ID you requested, if any.
+	ExpiresIn        *int    `json:"expiry"`   // The new expiry time you requested in seconds, if any.
+	Amount           *int    `json:"amount"`   // The new amount you requested in pence, if any.
 }
 
 func (response *UpdateResponse) UnmarshalJSON(data []byte) error {
@@ -75,7 +75,7 @@ func (request UpdateRequest) Fetch() (response *UpdateResponse, err *PASDKError)
 		"amount=" + toString(request.Amount),
 		"expiry=" + toString(request.ExpiresIn),
 		"order_id=" + toString(request.OrderID),
-		"token=" + request.ApplicationID,
+		"token=" + request.ApplicationToken,
 	}
 
 	requestParams = removeEmptyParams(requestParams)
@@ -101,8 +101,8 @@ func (request UpdateRequest) Fetch() (response *UpdateResponse, err *PASDKError)
 }
 
 func validateUpdateRequest(request UpdateRequest) (err *PASDKError) {
-	if len(request.ApplicationID) == 0 {
-		return buildValidationFailedError("ApplicationID cannot be empty")
+	if len(request.ApplicationToken) == 0 {
+		return buildValidationFailedError("ApplicationToken cannot be empty")
 	}
 
 	return nil

@@ -18,10 +18,10 @@ func Test_Account(t *testing.T) {
 		return
 	}
 
-	if response.DisplayName != "Test Dealer" {
+	if response.DisplayName != "Test Merchant" {
 		t.Error()
 	}
-	if response.LegalName != "Test Dealer" {
+	if response.LegalName != "Test Merchant" {
 		t.Error()
 	}
 

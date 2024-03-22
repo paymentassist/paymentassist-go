@@ -10,7 +10,7 @@ func Test_Capture(t *testing.T) {
 	}
 
 	request := CaptureRequest{
-		ApplicationID: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
+		ApplicationToken: "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
 	}
 
 	response, err := request.Fetch()
@@ -19,7 +19,7 @@ func Test_Capture(t *testing.T) {
 		t.Error(err)
 	}
 
-	if response.ApplicationID != "aed3bd4e-c478-4d73-a6fa-3640a7155e4f" {
+	if response.ApplicationToken != "aed3bd4e-c478-4d73-a6fa-3640a7155e4f" {
 		t.Error()
 	}
 	if response.Status != "completed" {
@@ -36,11 +36,11 @@ func Test_Capture(t *testing.T) {
 func Test_validateCaptureRequest(t *testing.T) {
 	request := CaptureRequest{}
 
-	if validateCaptureRequest(request).Error() != "ApplicationID cannot be empty" {
+	if validateCaptureRequest(request).Error() != "ApplicationToken cannot be empty" {
 		t.Error()
 	}
 
-	request.ApplicationID = "test"
+	request.ApplicationToken = "test"
 
 	if validateCaptureRequest(request) != nil {
 		t.Error()
