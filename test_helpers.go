@@ -134,7 +134,6 @@ func getMockAPIResponse[T interface{}](endpoint string) (*T, *PASDKError) {
 			{
 				"status": "ok",
 				"msg": null,
-				"last_accessed_at": "2025-11-12T12:00:00+00:00", 
 				"data": {
 					"token": "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
 					"status": "pending",
@@ -142,7 +141,8 @@ func getMockAPIResponse[T interface{}](endpoint string) (*T, *PASDKError) {
 					"expires_at": "2022-05-24T19:28:06+01:00",
 					"pa_ref": "testreference",
 					"requires_invoice": true,
-					"has_invoice": true
+					"has_invoice": true,
+					"last_accessed_at": "2025-11-12T12:00:00+00:00"
 				}
 			}`))
 	case "account":
