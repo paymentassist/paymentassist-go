@@ -99,6 +99,10 @@ func testStatus(t *testing.T, token string) {
 		response.ExpiresAt.After(time.Now().Add(time.Hour*25)) {
 		t.Error(response.ExpiresAt)
 	}
+	if response.LastAccessedAt.After(time.Now()) ||
+		response.LastAccessedAt.Before(time.Now().Add(time.Hour*-1)) {
+		t.Error(response.LastAccessedAt)
+	}
 	if response.ApplicationToken != token {
 		t.Error()
 	}
@@ -206,6 +210,7 @@ func testInvoice(t *testing.T, token string) {
 
 func testBegin(t *testing.T) *BeginResponse {
 	falseValue := false
+	date := time.Date(2000, 12, 25, 0, 0, 0, 0, time.UTC)
 
 	request := BeginRequest{
 		OrderID:           getRandomID(),
@@ -215,6 +220,7 @@ func testBegin(t *testing.T) *BeginResponse {
 		CustomerAddress1:  "Test House",
 		CustomerPostcode:  "TEST TES",
 		EnableAutoCapture: &falseValue,
+		DOB:               &date,
 	}
 
 	response, err := request.Fetch()

@@ -71,6 +71,7 @@ func (request UpdateRequest) Fetch() (response *UpdateResponse, err *PASDKError)
 		return nil, err.Wrap("request is invalid: ")
 	}
 
+	// Alphabetically sorted.
 	requestParams := []string{
 		"amount=" + toString(request.Amount),
 		"expiry=" + toString(request.ExpiresIn),

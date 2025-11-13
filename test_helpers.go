@@ -134,6 +134,7 @@ func getMockAPIResponse[T interface{}](endpoint string) (*T, *PASDKError) {
 			{
 				"status": "ok",
 				"msg": null,
+				"last_accessed_at": "2025-11-12T12:00:00+00:00", 
 				"data": {
 					"token": "aed3bd4e-c478-4d73-a6fa-3640a7155e4f",
 					"status": "pending",

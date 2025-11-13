@@ -31,8 +31,12 @@ func Test_Status(t *testing.T) {
 	}
 
 	expires, _ := time.Parse(time.RFC3339, "2022-05-24T19:28:06+01:00")
-
 	if !response.ExpiresAt.Equal(expires) {
+		t.Error()
+	}
+
+	lastAccessedAt, _ := time.Parse(time.RFC3339, "2025-11-12T12:00:00+00:00")
+	if !response.LastAccessedAt.Equal(lastAccessedAt) {
 		t.Error()
 	}
 

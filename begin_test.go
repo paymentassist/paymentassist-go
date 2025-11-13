@@ -3,12 +3,15 @@ package pasdk
 import (
 	"strings"
 	"testing"
+	"time"
 )
 
 func Test_Begin(t *testing.T) {
 	if shouldRunIntegrationTests() {
 		return
 	}
+
+	date := time.Date(2000, 12, 25, 0, 0, 0, 0, time.UTC)
 
 	request := BeginRequest{
 		OrderID:           "111",
@@ -17,6 +20,7 @@ func Test_Begin(t *testing.T) {
 		CustomerLastName:  "Testington",
 		CustomerAddress1:  "Test House",
 		CustomerPostcode:  "TEST TES",
+		DOB:               &date,
 	}
 
 	response, err := request.Fetch()
