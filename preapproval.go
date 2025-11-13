@@ -26,6 +26,7 @@ func (request PreapprovalRequest) Fetch() (response *PreapprovalResponse, err *P
 		return nil, err.Wrap("request is invalid: ")
 	}
 
+	// Alphabetically sorted.
 	requestParams := []string{
 		"addr1=" + request.CustomerAddress1,
 		"f_name=" + request.CustomerFirstName,

@@ -18,6 +18,7 @@ type StatusResponse struct {
 	PaymentAssistReference string    `json:"pa_ref"`           // Payment Assist's reference for this application. This may be empty as a reference is not generated until the finance facility or payment is successfully created (once an application moves to a "completed" status).
 	RequriesInvoice        bool      `json:"requires_invoice"` // Whether an invoice needs to be uploaded for this application before funds will be released to the merchant.
 	HasInvoice             bool      `json:"has_invoice"`      // Whether an invoice has been uploaded for this application.
+	LastAccessedAt         time.Time `json:"last_accessed_at"` // The last time the customer accessed the application.
 }
 
 // Fetch executes the request.
@@ -30,6 +31,7 @@ func (request StatusRequest) Fetch() (response *StatusResponse, err *PASDKError)
 		return nil, err.Wrap("request is invalid: ")
 	}
 
+	// Alphabetically sorted.
 	requestParams := []string{
 		"token=" + request.ApplicationToken,
 	}

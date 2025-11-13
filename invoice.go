@@ -28,6 +28,7 @@ func (request InvoiceRequest) Fetch() (response *InvoiceResponse, err *PASDKErro
 		return nil, err.Wrap("request is invalid: ")
 	}
 
+	// Alphabetically sorted.
 	requestParams := []string{
 		"filedata=" + base64.StdEncoding.EncodeToString(request.FileData),
 		"filetype=" + request.FileType,

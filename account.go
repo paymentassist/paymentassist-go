@@ -16,6 +16,7 @@ func (request AccountRequest) Fetch() (response *AccountResponse, err *PASDKErro
 
 	signature := generateSignature([]string{}, userCredentials.APISecret)
 
+	// Alphabetically sorted.
 	requestParams := []string{
 		"api_key=" + userCredentials.APIKey,
 		"signature=" + signature,

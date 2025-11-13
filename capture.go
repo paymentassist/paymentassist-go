@@ -24,6 +24,7 @@ func (request CaptureRequest) Fetch() (response *CaptureResponse, err *PASDKErro
 		return nil, err.Wrap("request is invalid: ")
 	}
 
+	// Alphabetically sorted.
 	requestParams := []string{
 		"token=" + toString(request.ApplicationToken),
 	}

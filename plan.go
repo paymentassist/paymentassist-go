@@ -26,6 +26,7 @@ func (request PlanRequest) Fetch() (response *PlanResponse, err *PASDKError) {
 		return nil, err.Wrap("request is invalid: ")
 	}
 
+	// Alphabetically sorted.
 	requestParams := []string{
 		"amount=" + toString(request.Amount),
 		"plan_id=" + toString(request.PlanID),
